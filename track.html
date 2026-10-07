@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TARAF | تتبع الطلب</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<section class="section" style="max-width:760px;margin:auto">
+  <div class="section-label">TARAF — ORDER TRACKING</div>
+  <h1 style="font-family:'Playfair Display',serif;color:#173b32">تابعي حالة طلبكِ</h1>
+  <p style="color:#74766f">أدخلي رقم الطلب الذي وصلكِ بعد إرسال طلب التفصيل.</p>
+  <form id="track" class="custom-form" style="margin-top:30px">
+    <label>رقم الطلب<input id="id" required placeholder="TRF-261007-1234"></label>
+    <button class="btn btn-primary full">عرض الحالة</button>
+    <div id="result" style="margin-top:20px"></div>
+  </form>
+</section>
+<script>
+const API_URL="PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL";
+document.getElementById("track").addEventListener("submit",async e=>{
+ e.preventDefault();
+ const id=document.getElementById("id").value.trim();
+ const box=document.getElementById("result");
+ if(API_URL.startsWith("PASTE_")){box.innerHTML="<p>لم يتم ربط نظام التتبع بعد. يمكنكِ استخدام رقم الطلب عبر واتساب حاليًا.</p>";return;}
+ try{
+   const r=await fetch(API_URL+"?action=status&id="+encodeURIComponent(id));
+   const d=await r.json();
+   box.innerHTML=d.ok?`<div class="calc-result"><span>حالة الطلب</span><strong>${d.status}</strong></div>`:"<p>لم يتم العثور على رقم الطلب.</p>";
+ }catch(err){box.innerHTML="<p>تعذر الاتصال بنظام التتبع. جربي مرة أخرى.</p>";}
+});
+</script>
+</body></html>
